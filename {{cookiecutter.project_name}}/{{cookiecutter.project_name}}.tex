@@ -1,0 +1,291 @@
+%#- Jinja2-шаблон стилевого файла LaTeX
+%#- Синтаксис взят отсюда
+%#- http://eosrei.net/articles/2015/11/latex-templates-python-and-jinja2-generate-pdfs
+%#- block_start_string = '\BLOCK{',
+%#- block_end_string = '}',
+%#- variable_start_string = '\VAR{',
+%#- variable_end_string = '}',
+%#- comment_start_string = '\#{',
+%#- comment_end_string = '}',
+%#- line_statement_prefix = '%%',
+%#- line_comment_prefix = '%#',
+%#- trim_blocks = True,
+%#- autoescape = False,
+%#- loader = jinja2.FileSystemLoader(os.path.abspath('.'))
+
+%#- Шабон официального письма
+%#- Используется XeLaTeX
+%#- Параметры:
+%#- jobname: <file_name>  # name of produced pdf file
+%#- font:
+%#-     size: 14pt  # 10pt, 12pt, 13pt, 14pt
+%#-     main: Times New Roman,
+%#-     sans: Arial,
+%#-     mono: Courier New
+%#-     math: XITS Math
+%#- margins:
+%#-     top: 2cm
+%#-     bottom: 2cm
+%#-     left: 3cm
+%#-     right: 1.5cm
+%#- pagenumbering:
+%#-     on: true | false
+%#-     position: top | bottom
+%#-     align: left | right | center
+%#-     firstpage: false | true
+
+%%- set font_size = '14pt'
+%%- set font_main = 'Times New Roman'
+%%- set font_sans = 'Arial'
+%%- set font_mono = 'Courier New'
+%%- set font_math = 'XITS Math'
+%%- if font is defined
+%%-     if 'size' in font
+%%-         set font_size = font['size']
+%%-     endif
+%%-     if 'main' in font
+%%-         set font_main = font['main']
+%%-     endif
+%%-     if 'sans' in font
+%%-         set font_sans = font['sans']
+%%-     endif
+%%-     if 'mono' in font
+%%-         set font_mono = font['mono']
+%%-     endif
+%%- endif
+
+%%- set margins_top = '2cm'
+%%- set margins_bottom = '2cm'
+%%- set margins_left = '3cm'
+%%- set margins_right = '1.5cm'
+%%- if margins is defined
+%%-     if 'top' in margins
+%%-         set margins_top = margins['top']
+%%-     endif
+%%-     if 'bottom' in margins
+%%-         set margins_bottom = margins['bottom']
+%%-     endif
+%%-     if 'left' in margins
+%%-         set margins_left = margins['left']
+%%-     endif
+%%-     if 'right' in margins
+%%-         set margins_right = margins['right']
+%%-     endif
+%%- endif
+
+%%- set pagenum_on = True
+%%- set pagenum_position = 'top'
+%%- set pagenum_align = 'center'
+%%- set pagenum_firstpage = False
+%%- if pagenumbering is defined
+%%-     if 'on' in pagenumbering
+%%-         set pagenum_on = pagenumbering['on']
+%%-     endif
+%%-     if 'position' in pagenumbering
+%%-         set pagenum_position = pagenumbering['position']
+%%-     endif
+%%-     if 'align' in pagenumbering
+%%-         set pagenum_align = pagenumbering['align']
+%%-     endif
+%%-     if 'firstpage' in pagenumbering
+%%-         set pagenum_firstpage = pagenumbering['firstpage']
+%%-     endif
+%%- endif
+
+%!TEX encoding=utf8
+%!TEX options=-output-directory=\VAR{j_outdir}
+%!TEX options=-shell-escape
+%!TEX program=xelatex
+%!TEX jobname=\VAR{jobname}
+
+\documentclass[
+    a4paper,
+    oneside,
+    onecolumn,
+    article,
+    \VAR{font_size}
+]{memoir}
+\setulmarginsandblock{
+    \VAR{margins_top}
+}{
+    \VAR{margins_bottom}
+}{*}
+\setlrmarginsandblock{
+    \VAR{margins_left}
+}{
+    \VAR{margins_right}
+}{*}
+\checkandfixthelayout
+%#----------------------Нумерация страниц-----------------------------
+
+\makepagestyle{standard} %Make standard pagestyle
+
+\makeatletter                 %Define standard pagestyle
+%%- if pagenum_on
+%%-     if pagenum_position == 'top'
+%%-         if pagenum_align == 'left'
+\makeevenhead{standard}{\thepage}{}{}
+\makeoddhead{standard}{\thepage}{}{}
+\makeevenfoot{standard}{}{}{}
+\makeoddfoot{standard}{}{}{}
+%%-         elif pagenum_align == 'center'
+\makeevenhead{standard}{}{\thepage}{}
+\makeoddhead{standard}{}{\thepage}{}
+\makeevenfoot{standard}{}{}{}
+\makeoddfoot{standard}{}{}{}
+%%-         elif pagenum_align == 'right'
+\makeevenhead{standard}{}{}{\thepage}
+\makeoddhead{standard}{}{}{\thepage}
+\makeevenfoot{standard}{}{}{}
+\makeoddfoot{standard}{}{}{}
+%%-         else
+\makeevenhead{standard}{}{\thepage}{}
+\makeoddhead{standard}{}{\thepage}{}
+\makeevenfoot{standard}{}{}{}
+\makeoddfoot{standard}{}{}{}
+%%-         endif
+%%-     elif pagenum_position == 'bottom'
+%%-         if pagenum_align == 'left'
+\makeevenhead{standard}{}{}{}
+\makeoddhead{standard}{}{}{}
+\makeevenfoot{standard}{\thepage}{}{}
+\makeoddfoot{standard}{\thepage}{}{}
+%%-         elif pagenum_align == 'center'
+\makeevenhead{standard}{}{}{}
+\makeoddhead{standard}{}{}{}
+\makeevenfoot{standard}{}{\thepage}{}
+\makeoddfoot{standard}{}{\thepage}{}
+%%-         elif pagenum_align == 'right'
+\makeevenhead{standard}{}{}{}
+\makeoddhead{standard}{}{}{}
+\makeevenfoot{standard}{}{}{\thepage}
+\makeoddfoot{standard}{}{}{\thepage}
+%%-         else
+\makeevenhead{standard}{}{}{}
+\makeoddhead{standard}{}{}{}
+\makeevenfoot{standard}{}{\thepage}{}
+\makeoddfoot{standard}{}{\thepage}{}
+%%-         endif
+%%-     else
+\makeevenhead{standard}{}{\thepage}{}
+\makeoddhead{standard}{}{\thepage}{}
+\makeevenfoot{standard}{}{}{}
+\makeoddfoot{standard}{}{}{}
+%%-     endif
+%%- else
+\makeevenhead{standard}{}{}{}
+\makeoddhead{standard}{}{}{}
+\makeevenfoot{standard}{}{}{}
+\makeoddfoot{standard}{}{}{}
+%%- endif
+\makeatother                  %
+
+%#-----------------Полезные пакеты-------------------------------------
+
+\usepackage{amsthm}
+\usepackage{amstext}
+\usepackage{amsmath}
+\usepackage{booktabs}   %  качественные таблицы
+\usepackage{longtable}   %  "длинные" таблицы
+\usepackage{tabu}
+\usepackage{changepage}
+
+
+%#----------------Шрифты и язык---------------------------------------
+\usepackage{polyglossia}   %% загружает пакет многоязыковой вёрстки
+\setmainlanguage[spelling=modern, babelshorthands=true]{russian}  %% устанавливает главный язык документа
+\setotherlanguage{english} %% объявляет второй язык документа
+\defaultfontfeatures{Ligatures={TeX}}  %% свойства шрифтов по умолчанию
+\setmainfont{\VAR{font_main}} %% задаёт основной шрифт документа
+\setsansfont{\VAR{font_sans}}                    %% задаёт шрифт без засечек
+\setmonofont{\VAR{font_mono}}               %% задаёт моноширинный шрифт
+\newfontfamily{\cyrillicfont}{\VAR{font_main}} % необходима для корректной работы в Linux
+\newfontfamily{\cyrillicfontsf}{\VAR{font_sans}} % необходима для корректной работы в Linux
+\newfontfamily{\cyrillicfonttt}{\VAR{font_mono}} % необходима для корректной работы в Linux
+%#-----------------Математика с поддержкой unicode----------------------------
+\usepackage{unicode-math} % всегда после amsmath
+\setmathfont{\VAR{font_math}}
+
+
+%=====================================================================
+% Полезные команды пользователя
+%=====================================================================
+
+\newcommand*{\sign}[2]{
+    \vspace*{2\baselineskip}
+    \noindent
+    \begin{minipage}{0.5\textwidth}
+      \begin{flushleft}
+        \SingleSpacing
+            #1
+       \end{flushleft}
+    \end{minipage}
+    \begin{minipage}{0.48\textwidth}
+        \begin{flushright}
+            \SingleSpacing
+            #2
+        \end{flushright}
+    \end{minipage}
+}
+
+%-----------Добавляет поле кому------------------------------
+
+
+\newcommand*{\header}[2]{
+    \begin{minipage}{0.4\textwidth}  % можно вставить картинку организации
+      \begin{flushleft}
+            #1
+      \end{flushleft}
+    \end{minipage}
+    \begin{minipage}{0.6\textwidth}  % поле кому
+                                     % например:
+                                     %    Ректору МГУ имени М.В. Ломоносова
+                                     %    академику В.А. Садовничему
+      \begin{flushleft}
+        \SingleSpacing
+            #2
+       \end{flushleft}
+    \end{minipage}
+    \vspace*{2\baselineskip}
+}
+
+\renewcommand*{\caption}[1]{         % Заглавие письма
+                                     % например:
+                                     %    Уважаемый Виктор Антонович!
+    \begin{center}
+        \SingleSpacing
+        \textbf{#1}
+    \end{center}
+}
+
+\renewcommand*{\date}[1]{%
+    \begin{flushright}
+        \textbf{#1}
+    \end{flushright}
+}
+
+\newcommand{\block}[2][\unskip]{
+
+  \hfill
+
+  \underline{\textbf{#1}}
+  \begin{adjustwidth*}{+1cm}{}
+    \begingroup%
+    \setlength{\parindent}{0cm}
+      #2
+    \endgroup%
+  \end{adjustwidth*}
+}
+%-----------Счётчик для автоматической нумерации---------------------
+\newcounter{index}
+\newcommand*{\No}{\noindent\refstepcounter{index}\textnumero~\theindex}
+\newcommand*{\Index}{\refstepcounter{index}\theindex}
+
+
+\begin{document}
+    \pagestyle{standard}
+%% if not pagenum_firstpage
+    \thispagestyle{empty}
+%% endif
+    \input{\VAR{tex_main}}
+\end{document}
