@@ -1,217 +1,72 @@
-%#- Jinja2-шаблон стилевого файла LaTeX
-%#- Синтаксис взят отсюда
-%#- http://eosrei.net/articles/2015/11/latex-templates-python-and-jinja2-generate-pdfs
-%#- block_start_string = '\BLOCK{',
-%#- block_end_string = '}',
-%#- variable_start_string = '\VAR{',
-%#- variable_end_string = '}',
-%#- comment_start_string = '\#{',
-%#- comment_end_string = '}',
-%#- line_statement_prefix = '%%',
-%#- line_comment_prefix = '%#',
-%#- trim_blocks = True,
-%#- autoescape = False,
-%#- loader = jinja2.FileSystemLoader(os.path.abspath('.'))
-
-%#- Шабон официального письма
-%#- Используется XeLaTeX
-%#- Параметры:
-%#- jobname: <file_name>  # name of produced pdf file
-%#- font:
-%#-     size: 14pt  # 10pt, 12pt, 13pt, 14pt
-%#-     main: Times New Roman,
-%#-     sans: Arial,
-%#-     mono: Courier New
-%#-     math: XITS Math
-%#- margins:
-%#-     top: 2cm
-%#-     bottom: 2cm
-%#-     left: 3cm
-%#-     right: 1.5cm
-%#- pagenumbering:
-%#-     on: true | false
-%#-     position: top | bottom
-%#-     align: left | right | center
-%#-     firstpage: false | true
-
-%%- set font_size = '14pt'
-%%- set font_main = 'Times New Roman'
-%%- set font_sans = 'Arial'
-%%- set font_mono = 'Courier New'
-%%- set font_math = 'XITS Math'
-%%- if font is defined
-%%-     if 'size' in font
-%%-         set font_size = font['size']
-%%-     endif
-%%-     if 'main' in font
-%%-         set font_main = font['main']
-%%-     endif
-%%-     if 'sans' in font
-%%-         set font_sans = font['sans']
-%%-     endif
-%%-     if 'mono' in font
-%%-         set font_mono = font['mono']
-%%-     endif
-%%- endif
-
-%%- set margins_top = '2cm'
-%%- set margins_bottom = '2cm'
-%%- set margins_left = '3cm'
-%%- set margins_right = '1.5cm'
-%%- if margins is defined
-%%-     if 'top' in margins
-%%-         set margins_top = margins['top']
-%%-     endif
-%%-     if 'bottom' in margins
-%%-         set margins_bottom = margins['bottom']
-%%-     endif
-%%-     if 'left' in margins
-%%-         set margins_left = margins['left']
-%%-     endif
-%%-     if 'right' in margins
-%%-         set margins_right = margins['right']
-%%-     endif
-%%- endif
-
-%%- set pagenum_on = True
-%%- set pagenum_position = 'top'
-%%- set pagenum_align = 'center'
-%%- set pagenum_firstpage = False
-%%- if pagenumbering is defined
-%%-     if 'on' in pagenumbering
-%%-         set pagenum_on = pagenumbering['on']
-%%-     endif
-%%-     if 'position' in pagenumbering
-%%-         set pagenum_position = pagenumbering['position']
-%%-     endif
-%%-     if 'align' in pagenumbering
-%%-         set pagenum_align = pagenumbering['align']
-%%-     endif
-%%-     if 'firstpage' in pagenumbering
-%%-         set pagenum_firstpage = pagenumbering['firstpage']
-%%-     endif
-%%- endif
-
-%!TEX encoding=utf8
-%!TEX options=-output-directory=\VAR{j_outdir}
+{% raw %}
 %!TEX options=-shell-escape
 %!TEX program=xelatex
-%!TEX jobname=\VAR{jobname}
 
 \documentclass[
     a4paper,
     oneside,
     onecolumn,
     article,
-    \VAR{font_size}
+    14pt
 ]{memoir}
 \setulmarginsandblock{
-    \VAR{margins_top}
+    2cm    % top margin
 }{
-    \VAR{margins_bottom}
+    2cm    % bottom margin
 }{*}
 \setlrmarginsandblock{
-    \VAR{margins_left}
+    3cm    % left margin
 }{
-    \VAR{margins_right}
+    1.5cm  % right margin
 }{*}
 \checkandfixthelayout
-%#----------------------Нумерация страниц-----------------------------
+% ----------------------Page numbering-----------------------------
 
-\makepagestyle{standard} %Make standard pagestyle
+\makepagestyle{standard}  % Make standard pagestyle
 
-\makeatletter                 %Define standard pagestyle
-%%- if pagenum_on
-%%-     if pagenum_position == 'top'
-%%-         if pagenum_align == 'left'
-\makeevenhead{standard}{\thepage}{}{}
-\makeoddhead{standard}{\thepage}{}{}
-\makeevenfoot{standard}{}{}{}
-\makeoddfoot{standard}{}{}{}
-%%-         elif pagenum_align == 'center'
-\makeevenhead{standard}{}{\thepage}{}
-\makeoddhead{standard}{}{\thepage}{}
-\makeevenfoot{standard}{}{}{}
-\makeoddfoot{standard}{}{}{}
-%%-         elif pagenum_align == 'right'
-\makeevenhead{standard}{}{}{\thepage}
-\makeoddhead{standard}{}{}{\thepage}
-\makeevenfoot{standard}{}{}{}
-\makeoddfoot{standard}{}{}{}
-%%-         else
-\makeevenhead{standard}{}{\thepage}{}
-\makeoddhead{standard}{}{\thepage}{}
-\makeevenfoot{standard}{}{}{}
-\makeoddfoot{standard}{}{}{}
-%%-         endif
-%%-     elif pagenum_position == 'bottom'
-%%-         if pagenum_align == 'left'
-\makeevenhead{standard}{}{}{}
-\makeoddhead{standard}{}{}{}
-\makeevenfoot{standard}{\thepage}{}{}
-\makeoddfoot{standard}{\thepage}{}{}
-%%-         elif pagenum_align == 'center'
-\makeevenhead{standard}{}{}{}
-\makeoddhead{standard}{}{}{}
-\makeevenfoot{standard}{}{\thepage}{}
-\makeoddfoot{standard}{}{\thepage}{}
-%%-         elif pagenum_align == 'right'
-\makeevenhead{standard}{}{}{}
-\makeoddhead{standard}{}{}{}
-\makeevenfoot{standard}{}{}{\thepage}
-\makeoddfoot{standard}{}{}{\thepage}
-%%-         else
-\makeevenhead{standard}{}{}{}
-\makeoddhead{standard}{}{}{}
-\makeevenfoot{standard}{}{\thepage}{}
-\makeoddfoot{standard}{}{\thepage}{}
-%%-         endif
-%%-     else
-\makeevenhead{standard}{}{\thepage}{}
-\makeoddhead{standard}{}{\thepage}{}
-\makeevenfoot{standard}{}{}{}
-\makeoddfoot{standard}{}{}{}
-%%-     endif
-%%- else
-\makeevenhead{standard}{}{}{}
-\makeoddhead{standard}{}{}{}
-\makeevenfoot{standard}{}{}{}
-\makeoddfoot{standard}{}{}{}
-%%- endif
-\makeatother                  %
+\makeatletter             % Define standard pagestyle
 
-%#-----------------Полезные пакеты-------------------------------------
+% -----------------------Header-------------------------------------
+\makeevenhead{standard}{}{\thepage}{}  % place page number in the center of footer
+\makeoddhead{standard}{}{\thepage}{}
+
+% -----------------------Footer-------------------------------------
+\makeevenfoot{standard}{}{}{}
+\makeoddfoot{standard}{}{}{}
+\makeatother
+
+%#-----------------Usefool packets-----------------------------------
 
 \usepackage{amsthm}
 \usepackage{amstext}
 \usepackage{amsmath}
-\usepackage{booktabs}   %  качественные таблицы
-\usepackage{longtable}   %  "длинные" таблицы
+\usepackage{booktabs}   %  nice tables
+\usepackage{longtable}   %  "long" tables
 \usepackage{tabu}
 \usepackage{changepage}
 
 
-%#----------------Шрифты и язык---------------------------------------
-\usepackage{polyglossia}   %% загружает пакет многоязыковой вёрстки
-\setmainlanguage[spelling=modern, babelshorthands=true]{russian}  %% устанавливает главный язык документа
-\setotherlanguage{english} %% объявляет второй язык документа
-\defaultfontfeatures{Ligatures={TeX}}  %% свойства шрифтов по умолчанию
-\setmainfont{\VAR{font_main}} %% задаёт основной шрифт документа
-\setsansfont{\VAR{font_sans}}                    %% задаёт шрифт без засечек
-\setmonofont{\VAR{font_mono}}               %% задаёт моноширинный шрифт
-\newfontfamily{\cyrillicfont}{\VAR{font_main}} % необходима для корректной работы в Linux
-\newfontfamily{\cyrillicfontsf}{\VAR{font_sans}} % необходима для корректной работы в Linux
-\newfontfamily{\cyrillicfonttt}{\VAR{font_mono}} % необходима для корректной работы в Linux
-%#-----------------Математика с поддержкой unicode----------------------------
-\usepackage{unicode-math} % всегда после amsmath
-\setmathfont{\VAR{font_math}}
+%#----------------Fonts and languages----------------------------------------
+\usepackage{polyglossia}   %% multilanguages support
+\setmainlanguage[spelling=modern, babelshorthands=true]{russian}  %% set russian as main language
+\setotherlanguage{english} %% set english as second language
+\defaultfontfeatures{Ligatures={TeX}}
+\setmainfont{Times New Roman} %% set main font
+\setsansfont{Arial}    %% set sans font
+\setmonofont{Courier New}   %% set mono font
+% -----------------The next 3 lines is needed for correct working in Linux---
+\newfontfamily{\cyrillicfont}{Times New Roman}
+\newfontfamily{\cyrillicfontsf}{Arial} 
+\newfontfamily{\cyrillicfonttt}{Courier New}
+%#-----------------Unicode support for math----------------------------------
+\usepackage{unicode-math}  % alway load after amsmath
+\setmathfont{XITS Math}    % math font
 
+% =====================================================================
+%   Special commands
+% =====================================================================
 
-%=====================================================================
-% Полезные команды пользователя
-%=====================================================================
-
-\newcommand*{\sign}[2]{
+\newcommand*{\sign}[2]{  % insert signature
     \vspace*{2\baselineskip}
     \noindent
     \begin{minipage}{0.5\textwidth}
@@ -228,19 +83,22 @@
     \end{minipage}
 }
 
-%-----------Добавляет поле кому------------------------------
+% How to use:
+%    \sign{Job position}{FirstName SecondName}
+
+%-----------Specific header------------------------------
 
 
 \newcommand*{\header}[2]{
-    \begin{minipage}{0.4\textwidth}  % можно вставить картинку организации
+    \begin{minipage}{0.4\textwidth}
       \begin{flushleft}
             #1
       \end{flushleft}
     \end{minipage}
-    \begin{minipage}{0.6\textwidth}  % поле кому
-                                     % например:
-                                     %    Ректору МГУ имени М.В. Ломоносова
-                                     %    академику В.А. Садовничему
+    \begin{minipage}{0.6\textwidth}  % the field `to whom`
+                                     % for example:
+                                     %    Rector of Lomonosov Moscow University
+                                     %    academician V. A. Sadovnichii
       \begin{flushleft}
         \SingleSpacing
             #2
@@ -249,22 +107,22 @@
     \vspace*{2\baselineskip}
 }
 
-\renewcommand*{\caption}[1]{         % Заглавие письма
-                                     % например:
-                                     %    Уважаемый Виктор Антонович!
+\renewcommand*{\caption}[1]{         % Insert caption of the later
+                                     % For example:
+                                     %    Dear Victor Antonovich!
     \begin{center}
         \SingleSpacing
         \textbf{#1}
     \end{center}
 }
 
-\renewcommand*{\date}[1]{%
+\renewcommand*{\date}[1]{%  Insert date
     \begin{flushright}
         \textbf{#1}
     \end{flushright}
 }
 
-\newcommand{\block}[2][\unskip]{
+\newcommand{\block}[2][\unskip]{%       %% Sepcial textblock
 
   \hfill
 
@@ -276,7 +134,7 @@
     \endgroup%
   \end{adjustwidth*}
 }
-%-----------Счётчик для автоматической нумерации---------------------
+%-----------Autonumeration index---------------------------------------
 \newcounter{index}
 \newcommand*{\No}{\noindent\refstepcounter{index}\textnumero~\theindex}
 \newcommand*{\Index}{\refstepcounter{index}\theindex}
@@ -284,8 +142,9 @@
 
 \begin{document}
     \pagestyle{standard}
-%% if not pagenum_firstpage
-    \thispagestyle{empty}
-%% endif
-    \input{\VAR{tex_main}}
+    \thispagestyle{empty}   % no number at the first page
+{% endraw %}
+    \input{ {{cookiecutter.project_name}}.source.tex }
+{% raw %}
 \end{document}
+{% endraw %}
