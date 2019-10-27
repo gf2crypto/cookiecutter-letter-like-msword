@@ -23,3 +23,4 @@ if __name__ == "__main__":
     with open(OPTION_FILE) as file:
         options = json.load(file)
     make_gitignore(options['create_gitignore'])
+    os.remove(OPTION_FILE)
