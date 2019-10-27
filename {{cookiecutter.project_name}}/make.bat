@@ -2,7 +2,7 @@
 
 set TEX_SOURCE="{{cookiecutter.project_name}}"
 
-set TEMP_FILES=("*.aux", "*.fdb_latexmk", "*.fls", "*.log", "*.out", "*.synctex.gz")
+set TEMP_FILES=("*.aux", "*.fdb_latexmk", "*.fls", "*.log", "*.out", "*.synctex.gz", "*.xdv")
 
 set ACTION=%1
 

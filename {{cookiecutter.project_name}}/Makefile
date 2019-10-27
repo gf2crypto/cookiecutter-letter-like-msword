@@ -2,7 +2,7 @@ TEX_SOURCE := {{cookiecutter.project_name}}
 
 BUILDPARAM = -cd -f -xelatex -interaction=nonstopmode -synctex=1
 WATCHPARAM = -pvc -f -xelatex -interaction=nonstopmode -synctex=1
-TEMP_FILES = *.aux *.fdb_latexmk *.fls *.log *.out *.synctex.gz
+TEMP_FILES = *.aux *.fdb_latexmk *.fls *.log *.out *.synctex.gz *.xdv
 
 .PHONY: build
 build:
