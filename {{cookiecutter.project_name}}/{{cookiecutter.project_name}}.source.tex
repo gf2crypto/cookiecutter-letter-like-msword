@@ -1,3 +1,4 @@
+{%- raw -%}
 %% The main source file, place the text here.
 %% If you need split the document into files
 %% then includes it here using `input` command.
@@ -8,4 +9,35 @@
 %%       Write every sentence in a separate line!
 %%       It is simplifying the control versioning.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{%- endraw -%}
 %!TEX root = ./{{cookiecutter.project_name}}.tex
+
+{% raw %}
+\header{}{
+  Ректору МГУ имени М.В.~Ломоносова\\
+  академику В.А.~Садовничему
+}
+
+\caption{Глубокоуважаемый Виктор Антонович!}
+
+Здесь текст письма.
+
+
+\bigskip
+\bigskip
+\sign{
+  Доцент кафедры информационной безопасности\\ ВМК МГУ имени М.В.~Ломоносова
+}{
+  И.В.~Чижов
+}
+
+\bigskip
+\bigskip
+\sign{
+  СОГЛАСОВАНО:\\
+  \vspace*{1\baselineskip}
+  Декан факультета\\ВМК МГУ имени М.В.~Ломоносова
+}{
+  Е.И.~Моисеев
+}
+{% endraw %}
